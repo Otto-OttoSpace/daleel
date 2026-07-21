@@ -1,0 +1,18 @@
+{
+  "name": "dls-check",
+  "version": "0.1.0",
+  "description": "Scan a codebase for Saudi DGA (Digital Government Authority) design-system readiness — RTL-first, IBM Plex Sans Arabic, WCAG 2.1 AA. Part of Otto.",
+  "bin": {
+    "dls-check": "bin/dls-check.js",
+    "dls-check-mcp": "mcp/dls-check-mcp.js"
+  },
+  "type": "commonjs",
+  "keywords": ["dga", "saudi", "design-system", "compliance", "rtl", "wcag", "arabic", "gov", "linter"],
+  "author": "Othmane Morad",
+  "license": "MIT",
+  "repository": { "type": "git", "url": "git+https://github.com/moradothmanepro-OTTO/dls-check.git" },
+  "homepage": "https://dls.ottospace.co",
+  "engines": { "node": ">=16" },
+  "files": ["bin", "mcp", "README.md"],
+  "publishConfig": { "access": "public" }
+}
