@@ -1,0 +1,15 @@
+# dls-check
+
+> Saudi DGA (Digital Government Authority) design-system readiness scanner.
+
+dls-check is a zero-dependency CLI + MCP server (part of Otto, dev.ottospace.co) that scans a
+codebase for Saudi DGA compliance — RTL-first, IBM Plex Sans Arabic, WCAG 2.1 AA — a legal
+requirement for Saudi government digital services. It flags physical CSS/Tailwind + hard-coded
+dir="ltr" (RTL), font stacks missing IBM Plex Sans Arabic (FONT), missing alt / html lang
+(A11Y), and prints the manual checklist for tokens/components/contrast/keyboard/parity.
+
+## Use it
+- CLI: `npx github:moradothmanepro-OTTO/dls-check .`
+- MCP: run `dls-check-mcp` (tools: dls_scan, dls_check_code)
+
+Links: https://github.com/moradothmanepro-OTTO/dls-check · https://dev.ottospace.co

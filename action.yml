@@ -1,0 +1,15 @@
+name: 'dls-check'
+description: 'Scan for Saudi DGA design-system readiness (RTL, IBM Plex Sans Arabic, WCAG)'
+author: 'Othmane Morad'
+branding:
+  icon: 'check-circle'
+  color: 'blue'
+inputs:
+  path:
+    description: 'File or directory to scan'
+    default: '.'
+runs:
+  using: 'composite'
+  steps:
+    - shell: bash
+      run: node "${{ github.action_path }}/bin/dls-check.js" "${{ inputs.path }}"
