@@ -111,3 +111,49 @@ test('config: fonts/ignore/disable are honored', () => {
   // but RTL still fires (page.html ml-4)
   assert.ok(R.some(f => f.cat === 'RTL' && /page\.html/.test(f.file)), 'RTL must still be reported');
 });
+
+// ---------------------------------------------------------------------------
+// --render font-proof (HarfBuzz): shapes the Arabic and PROVES the DGA font
+// actually covers + joins it — not just that it is NAMED in the stack. Skips
+// cleanly if the optional harfbuzzjs/fontkit deps are absent.
+// ---------------------------------------------------------------------------
+const shapeCore = (() => { try { return require('../lib/shape-core'); } catch { return null; } })();
+const AR_TEXT = 'مرحبا بالعالم — صفحة حكومية';
+const LATIN_FONT = path.join(__dirname, 'fixtures', 'Lato-Regular.ttf');   // Latin face (SIL OFL) — no Arabic
+const ARABIC_FILE = path.join(__dirname, 'fixtures', 'arabic-copy.html');
+const AMIRI = path.join(ROOT, 'assets', 'Amiri-Regular.ttf');
+
+test('render: a real Arabic face PROVES coverage; a Latin face FAILS (unit)', async (t) => {
+  if (!shapeCore || !(await shapeCore.isAvailable())) { t.skip('harfbuzzjs/fontkit unavailable'); return; }
+
+  const amiri = shapeCore.referenceFontBytes();
+  assert.ok(amiri, 'reference Arabic face must ship in assets/');
+  const pass = await shapeCore.proveArabicCoverage(amiri, AR_TEXT, { fontName: 'Amiri' });
+  assert.strictEqual(pass.length, 0, 'a real Arabic face must PASS the proof (no findings)');
+
+  const lato = fs.readFileSync(LATIN_FONT);
+  const fail = await shapeCore.proveArabicCoverage(lato, AR_TEXT, { fontName: 'Lato' });
+  assert.strictEqual(fail.length, 1, 'a Latin face over Arabic must FAIL the proof');
+  assert.strictEqual(fail[0].rule, 'font-no-arabic-coverage');
+  assert.strictEqual(fail[0].sev, 'render');
+  assert.strictEqual(fail[0].cat, 'FONT');
+
+  // non-Arabic text is out of scope → no finding even for a Latin face
+  const latinText = await shapeCore.proveArabicCoverage(lato, 'Hello World', { fontName: 'Lato' });
+  assert.strictEqual(latinText.length, 0, 'non-Arabic text is not subject to the Arabic font proof');
+});
+
+test('render CLI: --render --font flags a Latin font over Arabic; an Arabic face passes', async (t) => {
+  if (!shapeCore || !(await shapeCore.isAvailable())) { t.skip('harfbuzzjs/fontkit unavailable'); return; }
+
+  const fail = scanJson(ARABIC_FILE, ['--render', '--font', LATIN_FONT]);
+  assert.strictEqual(fail.tier, 'static+render');
+  assert.ok((fail.results || []).some(f => f.rule === 'font-no-arabic-coverage'), 'Latin font must be flagged over Arabic');
+
+  const pass = scanJson(ARABIC_FILE, ['--render', '--font', AMIRI]);
+  assert.ok(!(pass.results || []).some(f => f.rule === 'font-no-arabic-coverage'), 'a real Arabic face must pass');
+
+  // the static tier alone (no --render) never emits the render rule
+  const staticOnly = scanJson(ARABIC_FILE);
+  assert.ok(!(staticOnly.results || []).some(f => f.rule === 'font-no-arabic-coverage'), 'static tier must not emit render findings');
+});
