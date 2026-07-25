@@ -1,0 +1,5 @@
+/* CRITICAL guard: a fully-DGA-compliant font stack must produce NO finding.
+   The old regex captured only the whitespace before the opening quote and
+   inverted the result — flagging this compliant declaration. */
+.gov { font-family: "IBM Plex Sans Arabic", sans-serif; }
+.gov-2 { font-family: 'IBM Plex Sans Arabic', system-ui, sans-serif; }

@@ -1,0 +1,20 @@
+[
+  {
+    "cat": "A11Y",
+    "rule": "a11y-img-alt",
+    "line": 2,
+    "from": "<img>"
+  },
+  {
+    "cat": "A11Y",
+    "rule": "a11y-img-alt",
+    "line": 4,
+    "from": "<Image>"
+  },
+  {
+    "cat": "A11Y",
+    "rule": "a11y-html-lang",
+    "line": 7,
+    "from": "<html>"
+  }
+]

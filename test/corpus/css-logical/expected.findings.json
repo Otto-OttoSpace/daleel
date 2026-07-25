@@ -1,0 +1,50 @@
+[
+  {
+    "cat": "RTL",
+    "rule": "rtl-css-physical",
+    "line": 2,
+    "from": "margin-left"
+  },
+  {
+    "cat": "RTL",
+    "rule": "rtl-css-physical",
+    "line": 3,
+    "from": "padding-right"
+  },
+  {
+    "cat": "RTL",
+    "rule": "rtl-css-physical",
+    "line": 4,
+    "from": "border-left"
+  },
+  {
+    "cat": "RTL",
+    "rule": "rtl-css-physical",
+    "line": 5,
+    "from": "left"
+  },
+  {
+    "cat": "RTL",
+    "rule": "rtl-css-physical",
+    "line": 6,
+    "from": "text-align: left"
+  },
+  {
+    "cat": "RTL",
+    "rule": "rtl-css-physical",
+    "line": 7,
+    "from": "float: right"
+  },
+  {
+    "cat": "RTL",
+    "rule": "rtl-physical-corner",
+    "line": 8,
+    "from": "border-top-left-radius"
+  },
+  {
+    "cat": "RTL",
+    "rule": "rtl-hardcoded-dir",
+    "line": 9,
+    "from": "direction: ltr"
+  }
+]

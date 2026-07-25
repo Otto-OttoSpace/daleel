@@ -1,0 +1,32 @@
+[
+  {
+    "cat": "RTL",
+    "rule": "rtl-physical-utility",
+    "line": 3,
+    "from": "!pl-3"
+  },
+  {
+    "cat": "RTL",
+    "rule": "rtl-physical-utility",
+    "line": 3,
+    "from": "dark:md:mr-2"
+  },
+  {
+    "cat": "RTL",
+    "rule": "rtl-physical-utility",
+    "line": 3,
+    "from": "hover:pr-2"
+  },
+  {
+    "cat": "RTL",
+    "rule": "rtl-physical-utility",
+    "line": 3,
+    "from": "md:ml-4"
+  },
+  {
+    "cat": "RTL",
+    "rule": "rtl-physical-utility",
+    "line": 3,
+    "from": "rtl:text-left"
+  }
+]

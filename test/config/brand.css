@@ -1,0 +1,4 @@
+/* "My Brand Arabic" is approved via config → not a FONT gap. */
+.brand { font-family: "My Brand Arabic", sans-serif; }
+/* Still not the DGA family and not configured → FONT gap. */
+.other { font-family: "Inter", sans-serif; }

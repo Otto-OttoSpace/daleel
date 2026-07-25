@@ -1,0 +1,15 @@
+.card {
+  margin-left: 8px;
+  padding-right: 4px;
+  border-left: 1px solid #ccc;
+  left: 0;
+  text-align: left;
+  float: right;
+  border-top-left-radius: 6px;
+  direction: ltr;
+}
+.ok {
+  margin-inline-start: 8px;
+  inset-inline-start: 0;
+  text-align: start;
+}
