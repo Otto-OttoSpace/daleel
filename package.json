@@ -1,7 +1,7 @@
 {
   "name": "daleel",
-  "version": "0.2.0",
-  "description": "Daleel (دليل) — scan a codebase for Saudi DGA (Digital Government Authority) design-system readiness: RTL-first, IBM Plex Sans Arabic, WCAG 2.1 AA. AST-verified, report-only. Part of Otto.",
+  "version": "0.3.0",
+  "description": "Daleel (دليل) — scan a codebase for Saudi DGA (Digital Government Authority) design-system readiness: RTL-first, IBM Plex Sans Arabic, WCAG 2.1 AA. AST-verified, report-only, plus an optional HarfBuzz `--render` font-proof (covers + joins Arabic, no tofu). Part of Otto.",
   "bin": {
     "daleel": "bin/daleel.js",
     "dls-check": "bin/daleel.js",
@@ -22,7 +22,10 @@
     "wcag",
     "arabic",
     "gov",
-    "linter"
+    "linter",
+    "harfbuzz",
+    "shaping",
+    "font-proof"
   ],
   "author": "Othmane Morad",
   "license": "MIT",
@@ -38,6 +41,7 @@
     "bin",
     "lib",
     "mcp",
+    "assets",
     "action.yml",
     "README.md"
   ],
@@ -48,5 +52,9 @@
     "@babel/parser": "^8.0.4",
     "@babel/traverse": "^8.0.4",
     "postcss": "^8.5.23"
+  },
+  "optionalDependencies": {
+    "fontkit": "^2.0.4",
+    "harfbuzzjs": "^0.10.3"
   }
 }
