@@ -1,0 +1,20 @@
+name: ci
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18, 20, 22]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm ci
+      # regression corpus: findings JSON deep-equals expected + acceptance guards + config
+      - run: node --test test/run.js
+      # smoke: the CLI runs against the fixtures and both bin names resolve
+      - run: node bin/daleel.js test/fixtures --json
+      - run: node bin/daleel.js --version

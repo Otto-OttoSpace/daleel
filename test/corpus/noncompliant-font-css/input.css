@@ -1,0 +1,6 @@
+/* Names a font, but not the DGA family → FONT gap. */
+.brand { font-family: "Inter", sans-serif; }
+.heading { font-family: Georgia, serif; }
+/* Generic-only stacks name no font → not a gap. */
+.body { font-family: sans-serif; }
+.reset { font-family: inherit; }

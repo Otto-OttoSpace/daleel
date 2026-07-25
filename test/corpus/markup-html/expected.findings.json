@@ -1,0 +1,44 @@
+[
+  {
+    "cat": "A11Y",
+    "rule": "a11y-html-lang",
+    "line": 2,
+    "from": "<html>"
+  },
+  {
+    "cat": "FONT",
+    "rule": "font-not-dga",
+    "line": 4,
+    "from": "\"Inter\", sans-serif"
+  },
+  {
+    "cat": "RTL",
+    "rule": "rtl-hardcoded-dir",
+    "line": 4,
+    "from": "direction: ltr"
+  },
+  {
+    "cat": "RTL",
+    "rule": "rtl-physical-utility",
+    "line": 8,
+    "from": "md:pr-2"
+  },
+  {
+    "cat": "RTL",
+    "rule": "rtl-physical-utility",
+    "line": 8,
+    "from": "ml-4"
+  },
+  {
+    "cat": "RTL",
+    "rule": "rtl-physical-utility",
+    "line": 8,
+    "from": "text-left"
+  },
+  {
+    "cat": "A11Y",
+    "rule": "a11y-img-alt",
+    "line": 9,
+    "from": "<img>"
+  }
+]

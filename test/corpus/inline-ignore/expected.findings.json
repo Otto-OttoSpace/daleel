@@ -1,0 +1,14 @@
+[
+  {
+    "cat": "RTL",
+    "rule": "rtl-physical-utility",
+    "line": 6,
+    "from": "pl-3"
+  },
+  {
+    "cat": "RTL",
+    "rule": "rtl-physical-utility",
+    "line": 8,
+    "from": "mr-1"
+  }
+]

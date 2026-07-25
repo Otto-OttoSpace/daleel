@@ -1,0 +1,14 @@
+[
+  {
+    "cat": "FONT",
+    "rule": "font-not-dga",
+    "line": 2,
+    "from": "\"Inter\", sans-serif"
+  },
+  {
+    "cat": "FONT",
+    "rule": "font-not-dga",
+    "line": 3,
+    "from": "Georgia, serif"
+  }
+]

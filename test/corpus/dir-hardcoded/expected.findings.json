@@ -1,0 +1,14 @@
+[
+  {
+    "cat": "RTL",
+    "rule": "rtl-hardcoded-dir",
+    "line": 1,
+    "from": "dir=\"ltr\""
+  },
+  {
+    "cat": "RTL",
+    "rule": "rtl-hardcoded-dir",
+    "line": 4,
+    "from": "direction: ltr"
+  }
+]

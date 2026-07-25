@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>dls-check — Saudi DGA design-system readiness scanner</title>
-<meta name="description" content="Saudi DGA compliance (RTL-first, IBM Plex Sans Arabic, WCAG 2.1 AA) is a legal requirement for government digital services. dls-check scans your codebase for the gaps. Part of Otto.">
+<title>Daleel — Saudi DGA design-system readiness scanner</title>
+<meta name="description" content="Saudi DGA compliance (RTL-first, IBM Plex Sans Arabic, WCAG 2.1 AA) is a legal requirement for government digital services. Daleel scans your codebase for the gaps — AST-verified, report-only. Part of Otto.">
 <link rel="canonical" href="https://dls.ottospace.co/">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"SoftwareApplication","name":"dls-check","applicationCategory":"DeveloperApplication","operatingSystem":"Node.js","offers":{"@type":"Offer","price":"0"},"description":"Saudi DGA design-system readiness scanner.","isPartOf":{"@type":"Organization","name":"Otto","url":"https://dev.ottospace.co"}}
+{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Daleel","alternateName":"dls-check","applicationCategory":"DeveloperApplication","operatingSystem":"Node.js","offers":{"@type":"Offer","price":"0"},"description":"Saudi DGA design-system readiness scanner (RTL-first, IBM Plex Sans Arabic, WCAG 2.1 AA).","isPartOf":{"@type":"Organization","name":"Otto","url":"https://dev.ottospace.co"}}
 </script>
 <style>
   :root{--bg:#0d1117;--panel:#161b22;--fg:#e6edf3;--mut:#8b949e;--cy:#39c5cf;--blue:#58a6ff;--line:#21262d}
@@ -34,10 +34,10 @@
 <body>
 <div class="wrap">
   <header>
-    <div class="logo">dls-check</div>
+    <div class="logo">Daleel · دليل</div>
     <h1>Is your codebase ready for Saudi DGA compliance?</h1>
-    <p class="sub">Saudi's Digital Government Authority mandates one design system for every ministry — <b>RTL-first, IBM Plex Sans Arabic, WCAG 2.1 AA</b> — and it's a <b>legal requirement</b>. <code>dls-check</code> scans your code for the gaps and prints the manual checklist for the rest.</p>
-    <div class="cmd"><span style="color:var(--mut)">$</span>&nbsp;npx <b>dls-check</b> .</div>
+    <p class="sub">Saudi's Digital Government Authority mandates one design system for every ministry — <b>RTL-first, IBM Plex Sans Arabic, WCAG 2.1 AA</b> — and it's a <b>legal requirement</b>. <code>Daleel</code> scans your code for the gaps and prints the manual checklist for the rest. AST-verified, report-only — it never edits your source.</p>
+    <div class="cmd"><span style="color:var(--mut)">$</span>&nbsp;npx <b>daleel</b> .</div>
     <div class="btns">
       <a class="btn p" href="https://github.com/moradothmanepro-OTTO/dls-check">View on GitHub →</a>
       <a class="btn s" href="https://dev.ottospace.co">More Otto tools</a>
@@ -46,15 +46,15 @@
   <section>
     <h2>What it checks</h2>
     <ul>
-      <li><b>RTL-first</b> — physical CSS/Tailwind + hard-coded <code>dir="ltr"</code> that breaks the DGA default</li>
-      <li><b>Font</b> — flags stacks missing <b>IBM Plex Sans Arabic</b> (DGA-mandated)</li>
-      <li><b>WCAG 2.1 AA</b> — missing <code>alt</code>, missing <code>&lt;html lang&gt;</code></li>
+      <li><b>RTL-first</b> — physical CSS/Tailwind (incl. <code>md:</code>/<code>hover:</code>/<code>rtl:</code> variants, <code>space-x</code>, insets, corners, arbitrary values) + hard-coded <code>dir="ltr"</code> that breaks the DGA default</li>
+      <li><b>Font</b> — flags stacks that name a font but <b>not IBM Plex Sans Arabic</b> (DGA-mandated); quote-aware, so a compliant stack is never mis-flagged</li>
+      <li><b>WCAG 2.1 AA</b> — missing <code>alt</code>, missing <code>&lt;html lang&gt;</code> (JSX-aware)</li>
       <li><b>+ a manual checklist</b> — official DGA tokens/components, contrast, keyboard nav, AR⇄EN parity</li>
     </ul>
   </section>
   <section>
     <h2>For agencies building Saudi-gov services</h2>
-    <p class="note">Run <code>dls-check</code> in CI so every PR answers the one question a DGA audit hinges on: <b>does it pass?</b> Need a full conformance audit? <a href="https://dev.ottospace.co">Get in touch.</a></p>
+    <p class="note">Run <code>daleel</code> in CI so every PR answers the one question a DGA audit hinges on: <b>does it pass?</b> Need a full conformance audit? <a href="https://dev.ottospace.co">Get in touch.</a></p>
   </section>
   <footer>
     An <strong><a href="https://dev.ottospace.co">Otto</a></strong> tool · Saudi DGA readiness · MIT

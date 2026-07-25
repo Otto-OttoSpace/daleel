@@ -1,18 +1,52 @@
 {
-  "name": "dls-check",
-  "version": "0.1.0",
-  "description": "Scan a codebase for Saudi DGA (Digital Government Authority) design-system readiness — RTL-first, IBM Plex Sans Arabic, WCAG 2.1 AA. Part of Otto.",
+  "name": "daleel",
+  "version": "0.2.0",
+  "description": "Daleel (دليل) — scan a codebase for Saudi DGA (Digital Government Authority) design-system readiness: RTL-first, IBM Plex Sans Arabic, WCAG 2.1 AA. AST-verified, report-only. Part of Otto.",
   "bin": {
-    "dls-check": "bin/dls-check.js",
-    "dls-check-mcp": "mcp/dls-check-mcp.js"
+    "daleel": "bin/daleel.js",
+    "dls-check": "bin/daleel.js",
+    "daleel-mcp": "mcp/daleel-mcp.js"
   },
   "type": "commonjs",
-  "keywords": ["dga", "saudi", "design-system", "compliance", "rtl", "wcag", "arabic", "gov", "linter"],
+  "scripts": {
+    "test": "node --test test/run.js"
+  },
+  "keywords": [
+    "dga",
+    "daleel",
+    "dls-check",
+    "saudi",
+    "design-system",
+    "compliance",
+    "rtl",
+    "wcag",
+    "arabic",
+    "gov",
+    "linter"
+  ],
   "author": "Othmane Morad",
   "license": "MIT",
-  "repository": { "type": "git", "url": "git+https://github.com/moradothmanepro-OTTO/dls-check.git" },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/moradothmanepro-OTTO/dls-check.git"
+  },
   "homepage": "https://dls.ottospace.co",
-  "engines": { "node": ">=16" },
-  "files": ["bin", "mcp", "README.md"],
-  "publishConfig": { "access": "public" }
+  "engines": {
+    "node": ">=18"
+  },
+  "files": [
+    "bin",
+    "lib",
+    "mcp",
+    "action.yml",
+    "README.md"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@babel/parser": "^8.0.4",
+    "@babel/traverse": "^8.0.4",
+    "postcss": "^8.5.23"
+  }
 }

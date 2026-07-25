@@ -1,0 +1,5 @@
+{
+  "fonts": ["My Brand Arabic"],
+  "ignore": ["**/skip-me.css"],
+  "disable": ["A11Y"]
+}
