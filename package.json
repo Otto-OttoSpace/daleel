@@ -56,5 +56,9 @@
   "optionalDependencies": {
     "fontkit": "^2.0.4",
     "harfbuzzjs": "^0.10.3"
+  },
+  "funding": {
+    "type": "polar",
+    "url": "https://polar.sh/otto-space"
   }
 }
