@@ -115,9 +115,11 @@ Usage:
   npx daleel [path] --config f  use config file f (else .daleelrc.json)
   npx daleel --help | --version
 
-DGA compliance (RTL-first · IBM Plex Sans Arabic · WCAG 2.1 AA) is a legal
-requirement for Saudi government digital services. Daleel flags the auto-checkable
-gaps (report-only, never edits) + prints the manual list. The static tier is
+DGA design-system alignment (RTL-first · IBM Plex Sans Arabic · WCAG 2.1 AA) is
+the standard for Saudi government digital services. Daleel is an advisory readiness
+gate — it flags the auto-checkable gaps (report-only, never edits) + prints the
+manual list. It maps to the DGA design system as published; confirm against the
+current DGA spec for your project. The static tier is
 dependency-light; --render adds an OPTIONAL HarfBuzz tier (harfbuzzjs + fontkit)
 and ships a reference Arabic face so it works out-of-the-box.
 
@@ -140,15 +142,18 @@ async function setupRender(cfg, fontArg) {
     console.error('daleel: --render needs harfbuzzjs + fontkit (optionalDependencies). Skipping the font-proof tier.');
     return { shapeCore: null, fontBytes: null, fontLabel: null };
   }
-  let fontBytes = null, fontLabel = null;
+  let fontBytes = null, fontLabel = null, usingReference = false;
   const wantFont = fontArg || cfg.fontFile || null;
   if (wantFont) {
     try { fontBytes = fs.readFileSync(wantFont); fontLabel = path.basename(wantFont); }
     catch { console.error(`daleel: cannot read font ${wantFont} — falling back to the reference Arabic face`); }
   }
-  if (!fontBytes) { fontBytes = shapeCore.referenceFontBytes(); fontLabel = 'Amiri (reference Arabic face)'; }
-  if (!fontBytes) { console.error('daleel: reference font missing — skipping the font-proof tier.'); return { shapeCore: null, fontBytes: null, fontLabel: null }; }
-  return { shapeCore, fontBytes, fontLabel };
+  if (!fontBytes) {
+    fontBytes = shapeCore.referenceFontBytes(); fontLabel = 'Amiri (reference Arabic face)'; usingReference = true;
+    console.error('daleel: --render is proving against the bundled reference face (Amiri), NOT your shipped font — pass --font <path> to prove your production font. These results are indicative only.');
+  }
+  if (!fontBytes) { console.error('daleel: reference font missing — skipping the font-proof tier.'); return { shapeCore: null, fontBytes: null, fontLabel: null, usingReference: false }; }
+  return { shapeCore, fontBytes, fontLabel, usingReference };
 }
 
 async function main() {
@@ -174,7 +179,8 @@ async function main() {
   const opts = { fonts: cfg.fonts, disable: cfg.disable };
   const files = isDir ? walk(target, ignore) : (ignore(target) ? [] : [target]);
 
-  const { shapeCore, fontBytes, fontLabel } = render ? await setupRender(cfg, fontArg) : {};
+  const { shapeCore, fontBytes, fontLabel, usingReference } = render ? await setupRender(cfg, fontArg) : {};
+  const renderRan = !!(shapeCore && fontBytes);
 
   const byFile = {}; let total = 0; let renderTotal = 0; const cats = {};
   for (const file of files) {
@@ -218,7 +224,12 @@ async function main() {
   const bits = Object.entries(cats).map(([k, v]) => `${v} ${k}`).join(' · ');
   console.log(`\n\x1b[1mDaleel v${VERSION}\x1b[0m  ${files.length} files  ·  \x1b[36m${total} DGA gaps\x1b[0m${bits ? '  (' + bits + ')' : ''}${render ? `  ·  \x1b[33m${renderTotal} render\x1b[0m` : ''}`);
   console.log('\n' + MANUAL);
-  if (!(total + renderTotal)) console.log(`\n✓ auto-checks clean${render ? ' (incl. font-proof)' : ''} — still confirm the manual list above.`);
+  if (!(total + renderTotal)) {
+    const proof = (render && renderRan && !usingReference) ? ' (incl. font-proof vs your font)'
+      : (render && renderRan && usingReference) ? ' — font-proof used the bundled reference face; pass --font <your font> to prove your shipped font'
+      : '';
+    console.log(`\n✓ auto-checks clean${proof} — still confirm the manual list above.`);
+  }
   process.exit(total + renderTotal ? 1 : 0);
 }
 

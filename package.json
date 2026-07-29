@@ -31,9 +31,9 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/moradothmanepro-OTTO/dls-check.git"
+    "url": "git+https://github.com/Otto-OttoSpace/daleel.git"
   },
-  "homepage": "https://dls.ottospace.co",
+  "homepage": "https://github.com/Otto-OttoSpace/daleel#readme",
   "engines": {
     "node": ">=18"
   },
@@ -60,5 +60,8 @@
   "funding": {
     "type": "polar",
     "url": "https://polar.sh/otto-space"
+  },
+  "bugs": {
+    "url": "https://github.com/Otto-OttoSpace/daleel/issues"
   }
 }
