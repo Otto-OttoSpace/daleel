@@ -2,7 +2,7 @@
 'use strict';
 /*
  * Daleel (دليل) — scan a codebase for Saudi DGA (Digital Government Authority)
- * design-system readiness: RTL-first · IBM Plex Sans Arabic · WCAG 2.1 AA.
+ * design-system readiness: RTL-first · IBM Plex Sans Arabic · WCAG 2.2 AA.
  * Part of Otto · dev.ottospace.co
  *
  * Detection is AST-verified (Babel for JS/TS/JSX, PostCSS for CSS) so comments,
@@ -95,7 +95,7 @@ function walk(dir, ignore, out = []) {
 const MANUAL = `Manual DGA checks (Daleel can't verify these — confirm by hand):
   □ Uses the official DGA component library / tokens (not just look-alikes)
   □ DGA colour palette + spacing tokens (not arbitrary values)
-  □ WCAG 2.1 AA colour contrast on text & controls
+  □ WCAG 2.2 AA colour contrast on text & controls
   □ Full keyboard navigation + visible focus states
   □ IBM Plex Sans Arabic actually loaded (not just named)
   □ Full Arabic ⇄ English parity (every screen works in both)`;
@@ -115,7 +115,7 @@ Usage:
   npx daleel [path] --config f  use config file f (else .daleelrc.json)
   npx daleel --help | --version
 
-DGA design-system alignment (RTL-first · IBM Plex Sans Arabic · WCAG 2.1 AA) is
+DGA design-system alignment (RTL-first · IBM Plex Sans Arabic · WCAG 2.2 AA) is
 the standard for Saudi government digital services. Daleel is an advisory readiness
 gate — it flags the auto-checkable gaps (report-only, never edits) + prints the
 manual list. It maps to the DGA design system as published; confirm against the
