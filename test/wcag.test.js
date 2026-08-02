@@ -42,3 +42,35 @@ test('wcag 2.2: low-FP — hidden/labeled/id inputs + valid aria are NOT flagged
   assert.ok(!rules.has('a11y-invalid-aria'), 'valid aria-* must not flag');
   assert.ok(!rules.has('a11y-positive-tabindex'), 'no tabindex → no flag');
 });
+
+test('wcag 2.2: flags heading skip, empty link, duplicate id', () => {
+  const rules = a11yRules(`export default () => (<article>
+    <h1>Title</h1>
+    <h3>Skips h2</h3>
+    <a onClick={() => go()}></a>
+    <span id="dup">a</span>
+    <span id="dup">b</span>
+  </article>);`);
+  assert.ok(rules.has('a11y-heading-skip'), 'h1→h3 skips a level');
+  assert.ok(rules.has('a11y-empty-link'), '<a> with no href and no name');
+  assert.ok(rules.has('a11y-duplicate-id'), 'id="dup" appears twice');
+});
+
+test('wcag 2.2: low-FP — sequential headings, real links, unique ids are NOT flagged', () => {
+  const rules = a11yRules(`export default () => (<article>
+    <h1>Title</h1>
+    <h2>Section</h2>
+    <h3>Sub</h3>
+    <h2>Next</h2>
+    <a href="/x">home</a>
+    <a onClick={() => go()} aria-label="Menu"></a>
+    <a onClick={() => go()}><Icon /></a>
+    <span id="one">a</span>
+    <span id="two">b</span>
+    <div id={dynamic}>c</div>
+    <div id={dynamic}>d</div>
+  </article>);`);
+  assert.ok(!rules.has('a11y-heading-skip'), 'sequential/shallower headings must not flag');
+  assert.ok(!rules.has('a11y-empty-link'), 'href / aria-label / child-content links must not flag');
+  assert.ok(!rules.has('a11y-duplicate-id'), 'unique + dynamic ids must not flag');
+});
