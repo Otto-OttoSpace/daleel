@@ -9,7 +9,7 @@
   },
   "type": "commonjs",
   "scripts": {
-    "test": "node --test test/run.js test/wcag.test.js"
+    "test": "node --test test/run.js test/wcag.test.js test/license.test.js"
   },
   "keywords": [
     "dga",

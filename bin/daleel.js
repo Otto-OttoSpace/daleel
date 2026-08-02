@@ -12,11 +12,53 @@
  */
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 const { scanSource } = require('../lib/daleel-core');
+const lic = require('../lib/license');
 
 const VERSION = require('../package.json').version;
+const RULESET = 'DGA-DLS + WCAG 2.2 AA';
 
 function lineAt(src, index) { let line = 1; for (let i = 0; i < index && i < src.length; i++) if (src[i] === '\n') line++; return line; }
+
+// Guarded clock (some sandboxes stub Date) — returns an ISO string or null.
+function safeNowIso() { try { const n = Date.now(); if (typeof n === 'number' && isFinite(n) && n > 0) return new Date(n).toISOString(); } catch {} return null; }
+
+// ---------------------------------------------------------------------------
+// Daleel Pro — category / rule → DGA-DLS + WCAG references (for --report).
+// ---------------------------------------------------------------------------
+const CAT_REF = {
+  RTL:  { title: 'RTL / bidirectional layout', ref: 'DGA-DLS §Layout (RTL-first) · WCAG 2.2 AA 1.3.2' },
+  FONT: { title: 'Typography (Arabic web font)', ref: 'DGA-DLS §Typography (IBM Plex Sans Arabic)' },
+  A11Y: { title: 'Accessibility', ref: 'WCAG 2.2 AA (1.1.1 · 1.3.1 · 2.4.4 · 3.3.2 · 4.1.1 · 4.1.2)' },
+};
+const CAT_ORDER = ['RTL', 'FONT', 'A11Y'];
+const RULE_REF = {
+  'rtl-physical-utility': 'DGA-DLS RTL · WCAG 1.3.2',
+  'rtl-css-physical': 'DGA-DLS RTL · WCAG 1.3.2',
+  'rtl-physical-corner': 'DGA-DLS RTL · WCAG 1.3.2',
+  'rtl-hardcoded-dir': 'DGA-DLS RTL · WCAG 1.3.2',
+  'font-not-dga': 'DGA-DLS Typography',
+  'font-no-arabic-coverage': 'DGA-DLS Typography (render-proof)',
+  'a11y-img-alt': 'WCAG 1.1.1',
+  'a11y-html-lang': 'WCAG 3.1.1',
+  'a11y-heading-skip': 'WCAG 1.3.1 / 2.4.6',
+  'a11y-empty-link': 'WCAG 2.4.4 / 4.1.2',
+  'a11y-duplicate-id': 'WCAG 4.1.1',
+  'a11y-positive-tabindex': 'WCAG 2.4.3',
+  'a11y-input-no-label': 'WCAG 1.3.1 / 3.3.2 / 4.1.2',
+  'a11y-invalid-aria': 'WCAG 4.1.2',
+};
+
+// Stable content hash over the normalized findings (order-independent).
+function contentDigest(target, flat) {
+  const canon = flat.map(f => [f.file, f.line, f.cat, f.rule, f.from].join('|')).sort().join('\n');
+  return crypto.createHash('sha256').update('daleel/' + VERSION + '\n' + RULESET + '\n' + (target || '') + '\n' + canon).digest('hex');
+}
+
+function upsellLine(feature) {
+  return `\x1b[35m✦ ${feature} is a Daleel Pro feature.\x1b[0m  Upgrade → ${lic.UPGRADE_URL}\n  Already bought a key?  \x1b[1mdaleel activate <license-key>\x1b[0m   ·   check with  daleel status`;
+}
 
 const CODE_EXT = new Set(['.js', '.jsx', '.ts', '.tsx', '.mjs', '.cjs', '.html', '.htm', '.vue', '.svelte', '.astro']);
 const CSS_EXT = new Set(['.css', '.scss', '.less', '.pcss']);
@@ -115,6 +157,18 @@ Usage:
   npx daleel [path] --config f  use config file f (else .daleelrc.json)
   npx daleel --help | --version
 
+Daleel Pro (open-core — license via Lemon Squeezy):
+  daleel activate <key>        activate Daleel Pro on this machine
+  daleel status                show Free / Pro
+  daleel deactivate            release this machine's activation
+  npx daleel [path] --report   Pro: FULL compliance report — every finding
+                                grouped by category with its WCAG/DGA § refs,
+                                a per-category pass/fail summary + content hash
+  npx daleel [path] --cert     Pro: emit a signed-ish compliance certificate
+                                (JSON + a human line: tool/version/target/ruleset,
+                                findings summary, sha256 content hash)
+     add  --timestamp <iso>    stamp --cert with a fixed time (else now / omit)
+
 DGA design-system alignment (RTL-first · IBM Plex Sans Arabic · WCAG 2.2 AA) is
 the standard for Saudi government digital services. Daleel is an advisory readiness
 gate — it flags the auto-checkable gaps (report-only, never edits) + prints the
@@ -160,15 +214,32 @@ async function main() {
   const args = process.argv.slice(2);
   if (args.includes('--help') || args.includes('-h')) { console.log(HELP); return; }
   if (args.includes('--version') || args.includes('-v')) { console.log(VERSION); return; }
+
+  // ---- Daleel Pro license subcommands -------------------------------------
+  const sub = args[0];
+  if (sub === 'activate') { await lic.activate(args[1]); return; }
+  if (sub === 'deactivate') { await lic.deactivate(); return; }
+  if (sub === 'status') {
+    const s = await lic.status();
+    if (s.pro) console.log('Daleel Pro \x1b[32m(licensed)\x1b[0m' + (s.offline ? ' — offline, using last known-good' : ''));
+    else console.log('Daleel Free' + (s.status && s.status !== 'none' ? ` (license ${s.status})` : '') + `  ·  upgrade → ${lic.UPGRADE_URL}`);
+    return;
+  }
+
   const asJson = args.includes('--json');
   const render = args.includes('--render');
+  const wantReport = args.includes('--report');
+  const wantCert = args.includes('--cert');
   const cfgIdx = args.indexOf('--config');
   const cfgPath = cfgIdx !== -1 ? args[cfgIdx + 1] : null;
   const fontIdx = args.indexOf('--font');
   let fontArg = fontIdx !== -1 ? args[fontIdx + 1] : null;
   for (const a of args) if (a.startsWith('--font=')) fontArg = a.slice(7);
-  // the positional target skips the value consumed by --config / --font
-  const target = args.find((a, i) => !a.startsWith('-') && args[i - 1] !== '--config' && args[i - 1] !== '--font') || '.';
+  const tsIdx = args.indexOf('--timestamp');
+  let tsArg = tsIdx !== -1 ? args[tsIdx + 1] : null;
+  for (const a of args) if (a.startsWith('--timestamp=')) tsArg = a.slice(12);
+  // the positional target skips the value consumed by --config / --font / --timestamp
+  const target = args.find((a, i) => !a.startsWith('-') && args[i - 1] !== '--config' && args[i - 1] !== '--font' && args[i - 1] !== '--timestamp') || '.';
 
   let isDir;
   try { isDir = fs.statSync(target).isDirectory(); }
@@ -212,6 +283,63 @@ async function main() {
       results: Object.entries(byFile).flatMap(([f, arr]) => arr.map(x => ({ file: rel(f), ...x }))),
     }, null, 2));
     process.exit(total + renderTotal ? 1 : 0);
+  }
+
+  // ---- Daleel Pro output modes (--report / --cert) ------------------------
+  if (wantReport || wantCert) {
+    if (!(await lic.isPro())) {
+      console.log(upsellLine(wantReport ? '--report' : '--cert'));
+      console.log('\x1b[2mThe free scan is unchanged: run  daleel ' + (rel(target) || '.') + '  for the concise report.\x1b[0m');
+      process.exit(0);
+    }
+    const flat = Object.entries(byFile).flatMap(([f, arr]) => arr.map(x => ({ file: rel(f), cat: x.cat, rule: x.rule, line: x.line, from: x.from, msg: x.msg })));
+    const totalAll = total + renderTotal;
+    const hash = contentDigest(rel(target) || target, flat);
+
+    if (wantReport) {
+      const groups = {};
+      for (const f of flat) (groups[f.cat] = groups[f.cat] || []).push(f);
+      console.log(`\x1b[1mDaleel Pro — ${RULESET} compliance report\x1b[0m`);
+      console.log(`Target: ${rel(target) || target}   ·   Files scanned: ${files.length}`);
+      const ts = safeNowIso(); if (ts) console.log(`Generated: ${ts}`);
+      for (const cat of CAT_ORDER) {
+        const arr = (groups[cat] || []).sort((a, b) => (a.file < b.file ? -1 : a.file > b.file ? 1 : 0) || a.line - b.line);
+        const meta = CAT_REF[cat] || { title: cat, ref: '' };
+        console.log(`\n\x1b[36m${cat}\x1b[0m — ${meta.title}   \x1b[2m${meta.ref}\x1b[0m`);
+        if (!arr.length) { console.log('  \x1b[32m✓ pass\x1b[0m — no findings'); continue; }
+        for (const f of arr) {
+          const rref = RULE_REF[f.rule] ? `  \x1b[2m[${RULE_REF[f.rule]}]\x1b[0m` : '';
+          console.log(`  \x1b[31m✗\x1b[0m ${f.file}:${f.line}  ${f.from}  \x1b[2m(${f.rule})\x1b[0m${rref}`);
+        }
+      }
+      console.log('\n\x1b[1mSummary\x1b[0m');
+      for (const cat of CAT_ORDER) {
+        const n = (groups[cat] || []).length;
+        console.log(`  ${cat.padEnd(5)} ${n === 0 ? '\x1b[32mPASS\x1b[0m' : '\x1b[31mFAIL\x1b[0m (' + n + ')'}`);
+      }
+      console.log(`  \x1b[1mOverall: ${totalAll === 0 ? '\x1b[32mPASS' : '\x1b[31mFAIL'}\x1b[0m  (${totalAll} findings across ${files.length} files)`);
+      console.log(`  Content hash (sha256): ${hash}`);
+      console.log('\n' + MANUAL);
+      process.exit(totalAll ? 1 : 0);
+    }
+
+    // --cert
+    const cats2 = {};
+    for (const f of flat) cats2[f.cat] = (cats2[f.cat] || 0) + 1;
+    const ts = tsArg || safeNowIso();
+    const cert = {
+      tool: 'daleel',
+      version: VERSION,
+      target: rel(target) || target,
+      ruleset: RULESET,
+      ...(ts ? { timestamp: ts } : {}),
+      findings: { total: totalAll, static: total, render: renderTotal, byCategory: cats2 },
+      result: totalAll === 0 ? 'PASS' : 'FAIL',
+      sha256: hash,
+    };
+    console.log(`daleel/${VERSION} · ${cert.result} · ${RULESET} · ${totalAll} findings · sha256:${hash.slice(0, 16)}…${ts ? ' · ' + ts : ''}`);
+    console.log(JSON.stringify(cert, null, 2));
+    process.exit(0);
   }
 
   for (const file of Object.keys(byFile)) {
