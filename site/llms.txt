@@ -3,7 +3,7 @@
 > Saudi DGA (Digital Government Authority) design-system readiness scanner.
 
 Daleel (formerly dls-check) is a report-only CLI + MCP server (part of Otto, dev.ottospace.co)
-that scans a codebase for Saudi DGA compliance — RTL-first, IBM Plex Sans Arabic, WCAG 2.1 AA — a
+that scans a codebase for Saudi DGA compliance — RTL-first, IBM Plex Sans Arabic, WCAG 2.2 AA — a
 legal requirement for Saudi government digital services. Detection is AST-verified (Babel for
 JS/TS/JSX, PostCSS for CSS), so utilities inside comments, strings and identifiers are never
 mis-flagged. It flags physical CSS/Tailwind (incl. variant-prefixed like md:/hover:/rtl:, space-x,
@@ -12,8 +12,8 @@ a font but not IBM Plex Sans Arabic (FONT), missing alt / html lang (A11Y), and 
 checklist for tokens/components/contrast/keyboard/parity. Daleel never edits your source.
 
 ## Use it
-- CLI: `npx github:moradothmanepro-OTTO/dls-check .` (bin: `daleel`, alias `dls-check`)
+- CLI: `npx github:Otto-OttoSpace/daleel .` (bin: `daleel`, alias `dls-check`)
 - MCP: run `daleel-mcp` (tools: daleel_scan, daleel_check_code; aliases dls_scan, dls_check_code)
 - Suppress: `// daleel-ignore` · Config: `.daleelrc.json` ({ fonts, ignore, disable })
 
-Links: https://github.com/moradothmanepro-OTTO/dls-check · https://dev.ottospace.co
+Links: https://github.com/Otto-OttoSpace/daleel · https://dev.ottospace.co

@@ -1,5 +1,5 @@
 name: 'Daleel'
-description: 'Scan for Saudi DGA design-system readiness (RTL-first, IBM Plex Sans Arabic, WCAG 2.1 AA)'
+description: 'Scan for Saudi DGA design-system readiness (RTL-first, IBM Plex Sans Arabic, WCAG 2.2 AA)'
 author: 'Othmane Morad'
 branding:
   icon: 'check-circle'
