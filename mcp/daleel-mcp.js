@@ -20,7 +20,7 @@ function runCli(args) {
 }
 
 const TOOLS = [
-  { name: 'daleel_scan', description: 'Scan a file or directory for Saudi DGA design-system readiness (RTL-first, IBM Plex Sans Arabic, WCAG 2.1 AA). Returns JSON gaps by category (RTL/FONT/A11Y).',
+  { name: 'daleel_scan', description: 'Scan a file or directory for Saudi DGA design-system readiness (RTL-first, IBM Plex Sans Arabic, WCAG 2.2 AA). Returns JSON gaps by category (RTL/FONT/A11Y).',
     inputSchema: { type: 'object', properties: { path: { type: 'string' } }, required: ['path'] } },
   { name: 'daleel_check_code', description: 'Check a code snippet for Saudi DGA design-system gaps before shipping a Saudi-gov UI.',
     inputSchema: { type: 'object', properties: { code: { type: 'string' }, ext: { type: 'string', description: 'e.g. .tsx or .css' } }, required: ['code'] } },
