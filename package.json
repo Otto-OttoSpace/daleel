@@ -1,6 +1,6 @@
 {
   "name": "daleel",
-  "version": "0.6.1",
+  "version": "0.7.0",
   "description": "Daleel (دليل) — scan a codebase for Saudi DGA (Digital Government Authority) design-system readiness: RTL-first, IBM Plex Sans Arabic, WCAG 2.2 AA. AST-verified, report-only, plus an optional HarfBuzz `--render` font-proof (covers + joins Arabic, no tofu). Part of OttoSpace.",
   "bin": {
     "daleel": "bin/daleel.js",
