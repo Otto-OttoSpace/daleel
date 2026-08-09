@@ -118,7 +118,7 @@ test('cli: with a fresh active license, --report renders and --cert emits a cert
     const cert = runCli([PROJECT, '--cert', '--timestamp', '2026-01-01T00:00:00.000Z'], home);
     assert.strictEqual(cert.code, 0, 'cert exits 0');
     assert.match(cert.out, /"tool":\s*"daleel"/, 'emits the certificate JSON');
-    assert.match(cert.out, /"ruleset":\s*"DGA-DLS \+ WCAG 2\.2 AA"/, 'names the ruleset');
+    assert.match(cert.out, /"ruleset":\s*"DGA-DLS \+ WCAG 2\.2 AA \(structural\)"/, 'names the ruleset');
     assert.match(cert.out, /"sha256":\s*"[0-9a-f]{64}"/, 'includes a sha256 content hash');
     assert.match(cert.out, /2026-01-01T00:00:00\.000Z/, 'honors --timestamp');
     assert.match(cert.out, /"result":\s*"FAIL"/, 'FAIL result when findings exist');
