@@ -100,6 +100,9 @@ function loadConfig(startDir, explicit) {
 // Minimal glob → RegExp (supports **, *, ?). Matched against the path relative
 // to cwd (posix separators) and the basename.
 function globToRe(glob) {
+  // A repo-supplied ignore glob is untrusted; cap its length so it can't be a
+  // pathological pattern.
+  glob = String(glob).slice(0, 200);
   let re = '';
   for (let i = 0; i < glob.length; i++) {
     const c = glob[i];
@@ -110,6 +113,9 @@ function globToRe(glob) {
     else if ('/.+^${}()|[]\\'.includes(c)) re += '\\' + c;
     else re += c;
   }
+  // Collapse adjacent equal quantifiers so `**` runs can't cause catastrophic
+  // backtracking (e.g. eight `**` → eight chained `.*` is exponential).
+  re = re.replace(/(?:\.\*)+/g, '.*').replace(/(?:\[\^\/\]\*)+/g, '[^/]*');
   return new RegExp('^(?:' + re + ')$');
 }
 function makeIgnorer(patterns) {
