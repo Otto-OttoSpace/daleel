@@ -29,8 +29,22 @@ const TOOLS = [
   { name: 'dls_check_code', description: 'Alias of daleel_check_code.', inputSchema: { type: 'object', properties: { code: { type: 'string' }, ext: { type: 'string' } }, required: ['code'] } },
 ];
 
+// A caller-supplied scan `path` must not be readable as a flag or subcommand
+// (e.g. `--init-rules`, `activate`, `deactivate`), which would hijack the CLI
+// into writing/deleting files instead of scanning. Reject leading-dash and
+// prefix a bare relative path with `./` so it can only be a path.
+function safeScanPath(p) {
+  if (typeof p !== 'string' || !p || p.startsWith('-')) return null;
+  if (!path.isAbsolute(p) && !p.startsWith('./') && !p.startsWith('../')) return './' + p;
+  return p;
+}
+
 function callTool(name, args) {
-  if (name === 'daleel_scan' || name === 'dls_scan') return runCli([args.path, '--json']);
+  if (name === 'daleel_scan' || name === 'dls_scan') {
+    const p = safeScanPath(args.path);
+    if (!p) throw new Error('invalid path (must be a file/dir, not a flag or subcommand)');
+    return runCli([p, '--json']);
+  }
   if (name === 'daleel_check_code' || name === 'dls_check_code') {
     // `ext` is attacker-controlled and gets joined into a temp path, so accept
     // only a leading dot followed by alphanumerics (no '/', '\\', '..' or other
