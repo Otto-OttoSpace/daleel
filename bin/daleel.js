@@ -17,7 +17,11 @@ const { scanSource } = require('../lib/daleel-core');
 const lic = require('../lib/license');
 
 const VERSION = require('../package.json').version;
-const RULESET = 'DGA-DLS + WCAG 2.2 AA';
+// "structural" is deliberate: Daleel automates the structural AA criteria
+// (alt/label/aria/heading/id/tabindex/lang) + same-element colour contrast.
+// Full-cascade contrast, images, and judgement criteria stay on the manual
+// checklist — so a PASS never reads as a complete WCAG 2.2 AA audit.
+const RULESET = 'DGA-DLS + WCAG 2.2 AA (structural)';
 
 function lineAt(src, index) { let line = 1; for (let i = 0; i < index && i < src.length; i++) if (src[i] === '\n') line++; return line; }
 
@@ -137,7 +141,8 @@ function walk(dir, ignore, out = []) {
 const MANUAL = `Manual DGA checks (Daleel can't verify these — confirm by hand):
   □ Uses the official DGA component library / tokens (not just look-alikes)
   □ DGA colour palette + spacing tokens (not arbitrary values)
-  □ WCAG 2.2 AA colour contrast on text & controls
+  □ WCAG 2.2 AA colour contrast beyond same-element literal colours
+    (cascaded/inherited colours, text over images, icon/UI states)
   □ Full keyboard navigation + visible focus states
   □ IBM Plex Sans Arabic actually loaded (not just named)
   □ Full Arabic ⇄ English parity (every screen works in both)`;
