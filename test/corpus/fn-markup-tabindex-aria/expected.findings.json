@@ -1,0 +1,14 @@
+[
+  {
+    "cat": "A11Y",
+    "rule": "a11y-positive-tabindex",
+    "line": 1,
+    "from": "tabindex=5"
+  },
+  {
+    "cat": "A11Y",
+    "rule": "a11y-invalid-aria",
+    "line": 2,
+    "from": "aria-lable"
+  }
+]
