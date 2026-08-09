@@ -9,7 +9,7 @@
   },
   "type": "commonjs",
   "scripts": {
-    "test": "node --test test/run.js test/wcag.test.js test/license.test.js"
+    "test": "node --test test/run.js test/wcag.test.js test/license.test.js test/mcp-security.test.js"
   },
   "keywords": [
     "dga",
@@ -35,7 +35,7 @@
   },
   "homepage": "https://github.com/Otto-OttoSpace/daleel#readme",
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "files": [
     "bin",
