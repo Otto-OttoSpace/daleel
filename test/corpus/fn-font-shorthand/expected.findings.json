@@ -1,0 +1,8 @@
+[
+  {
+    "cat": "FONT",
+    "rule": "font-not-dga",
+    "line": 1,
+    "from": "bold 14px Inter"
+  }
+]
