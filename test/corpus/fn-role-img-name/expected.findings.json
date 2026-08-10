@@ -1,0 +1,8 @@
+[
+  {
+    "cat": "A11Y",
+    "rule": "a11y-img-alt",
+    "line": 1,
+    "from": "<div role=\"img\">"
+  }
+]
