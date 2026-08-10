@@ -1,0 +1,8 @@
+[
+  {
+    "cat": "A11Y",
+    "rule": "a11y-html-lang-invalid",
+    "line": 2,
+    "from": "<html lang=\"\">"
+  }
+]
