@@ -1,0 +1,14 @@
+[
+  {
+    "cat": "A11Y",
+    "rule": "a11y-contrast",
+    "line": 3,
+    "from": "#777777 on #888888 (1.26:1)"
+  },
+  {
+    "cat": "A11Y",
+    "rule": "a11y-contrast",
+    "line": 4,
+    "from": "#999999 on #aaaaaa (1.23:1)"
+  }
+]
