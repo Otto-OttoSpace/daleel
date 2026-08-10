@@ -1,0 +1,14 @@
+[
+  {
+    "cat": "A11Y",
+    "rule": "a11y-name-missing",
+    "line": 3,
+    "from": "<button>"
+  },
+  {
+    "cat": "A11Y",
+    "rule": "a11y-name-missing",
+    "line": 5,
+    "from": "<a>"
+  }
+]
