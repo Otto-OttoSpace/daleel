@@ -287,11 +287,15 @@ async function main() {
   const rel = f => path.relative(process.cwd(), f) || f;
 
   if (asJson) {
+    // Canonical envelope: `findings` is ALWAYS an array (matches miraat/kashida), the
+    // count lives in `total`. `results` kept one release as a deprecated alias.
+    const findingsArr = Object.entries(byFile).flatMap(([f, arr]) => arr.map(x => ({ file: rel(f), ...x })));
     console.log(JSON.stringify({
       version: VERSION, tier: render ? 'static+render' : 'static', files: files.length,
-      findings: total, renderFindings: renderTotal, byCategory: cats,
+      total, renderFindings: renderTotal, byCategory: cats,
       config: cfg._file ? rel(cfg._file) : null,
-      results: Object.entries(byFile).flatMap(([f, arr]) => arr.map(x => ({ file: rel(f), ...x }))),
+      findings: findingsArr,
+      results: findingsArr,
     }, null, 2));
     process.exit(total + renderTotal ? 1 : 0);
   }
